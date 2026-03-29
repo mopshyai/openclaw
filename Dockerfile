@@ -1,38 +1,23 @@
-FROM node:20-bookworm-slim
+FROM node:20
 
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-        curl git openssl procps && \
-            rm -rf /var/lib/apt/lists/*
+RUN npm install -g pnpm
 
-            # Install pnpm
-            RUN npm install -g pnpm
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+COPY ui/package.json ./ui/package.json
+COPY patches ./patches
 
-            # Copy package files first for better layer caching
-            COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+RUN pnpm install --frozen-lockfile
 
-            # Copy UI package.json if it exists
-            COPY ui/package.json ./ui/package.json
+COPY . .
 
-            # Copy patches directory
-            COPY patches ./patches
+RUN pnpm build:docker || true
+RUN pnpm ui:build || true
 
-            # Install dependencies
-            RUN pnpm install --frozen-lockfile
+ENV NODE_ENV=production
+ENV PORT=3000
 
-            # Copy the rest of the source code
-            COPY . .
+EXPOSE 3000
 
-            # Build the project
-            RUN pnpm build:docker || true
-            RUN pnpm ui:build || true
-
-            ENV NODE_ENV=production
-            ENV PORT=3000
-
-            EXPOSE 3000
-
-            CMD ["node", "openclaw.mjs", "gateway", "--allow-unconfigured"]
+CMD ["node", "openclaw.mjs", "gateway", "--allow-unconfigured"]
