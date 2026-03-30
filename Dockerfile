@@ -19,4 +19,4 @@ ENV PORT=3000
 
 EXPOSE 3000
 
-CMD ["node", "openclaw.mjs", "gateway", "--allow-unconfigured"]
+CMD ["node", "openclaw.mjs", "gateway", "--allow-unconfigured", "--port", "3000", "--bind", "lan"]
