@@ -11,7 +11,7 @@ RUN pnpm install
 
 COPY . .
 
-RUN pnpm build:docker || true
+RUN pnpm build:docker
 RUN pnpm ui:build || true
 
 ENV NODE_ENV=production
