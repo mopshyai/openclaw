@@ -1,0 +1,13 @@
+{
+    "gateway": {
+          "controlUi": {
+                  "dangerouslyAllowHostHeaderOriginFallback": true
+          }
+    },
+    "channels": {
+          "telegram": {
+                  "groupPolicy": "open",
+                  "botToken": "${TELEGRAM_BOT_TOKEN}"
+          }
+    }
+}
