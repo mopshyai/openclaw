@@ -21,4 +21,5 @@ ENV PORT=3000
 
 EXPOSE 3000
 
+COPY openclaw.json /data/openclaw.json
 CMD ["node", "openclaw.mjs", "gateway", "--allow-unconfigured", "--port", "3000", "--bind", "lan"]
