@@ -11,7 +11,9 @@ RUN pnpm install
 
 COPY . .
 
-RUN pnpm canvas:a2ui:bundle && pnpm build:docker
+# Skip canvas A2UI bundle (vendor/apps excluded from Docker build context)
+ENV OPENCLAW_A2UI_SKIP_MISSING=1
+RUN pnpm build:docker
 RUN pnpm ui:build || true
 
 ENV NODE_ENV=production
