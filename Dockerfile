@@ -13,11 +13,13 @@ COPY . .
 
 # Skip canvas A2UI bundle (vendor/apps excluded from Docker build context)
 ENV OPENCLAW_A2UI_SKIP_MISSING=1
+ENV CI=true
 RUN pnpm build:docker
 RUN pnpm ui:build || true
 
 ENV NODE_ENV=production
 ENV PORT=3000
+ENV OPENCLAW_STATE_DIR=/data
 
 EXPOSE 3000
 
