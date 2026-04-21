@@ -13,13 +13,15 @@ COPY . .
 
 # Skip canvas A2UI bundle (vendor/apps excluded from Docker build context)
 ENV OPENCLAW_A2UI_SKIP_MISSING=1
+ENV CI=true
 RUN pnpm build:docker
 RUN pnpm ui:build || true
 
 ENV NODE_ENV=production
 ENV PORT=3000
+ENV OPENCLAW_STATE_DIR=/data
 
 EXPOSE 3000
 
 COPY openclaw.json /data/openclaw.json
-CMD ["node", "openclaw.mjs", "gateway", "--allow-unconfigured", "--port", "3000", "--bind", "lan"]
+CMD sh -c "node openclaw.mjs gateway --allow-unconfigured --port ${PORT:-3000} --bind lan"
